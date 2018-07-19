@@ -338,6 +338,13 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
      */
     protected function isAllowed($params)
     {
+        if ($params['page'] instanceof Navigation\Page\ExpressivePage) {
+            /** @var Navigation\Page\ExpressivePage $page */
+            $page = $params['page'];
+            $acl = $params['acl'];
+            return $acl->isAllowed($this->getRole(), $page->getRoute());
+        }
+
         $events = $this->getEventManager() ?: $this->createEventManager();
         $results = $events->trigger(__FUNCTION__, $this, $params);
         return $results->last();
